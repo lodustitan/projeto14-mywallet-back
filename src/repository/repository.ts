@@ -1,0 +1,69 @@
+import { IRepository } from "../types/types.js";
+import { v4 as uuidv4 } from 'uuid';
+import bcrypt from "bcrypt";
+import client from "../database/database.js";
+
+class Repository implements IRepository
+{
+    async createAccount(name: string, email: string, password: string): Promise<void>
+    {
+        try
+        {
+            const uid = uuidv4();
+    
+            bcrypt.hash(password, 10, async function(err, hash) {
+                await client
+                    .db("myWallet")
+                    .collection("user")
+                    .insertOne({uid, name, email, password: hash});
+            });
+        }
+        catch(err)
+        {
+            console.error(err);
+        }
+
+    }
+    async loginAccount(email: string, password: string): Promise<string>
+    {        
+        let myUid: string = "";
+
+        const query = await client
+                .db("myWallet")
+                .collection("user")
+                .findOne({email});
+
+        if(query)
+        {
+            if( bcrypt.compareSync(password, query.password) )
+                return myUid = query.uid;
+        }
+
+        return myUid;
+    }
+    async addWalletData(ownerUid:string, value: number, description: string, type: string): Promise<void>
+    {
+        const uid = uuidv4();
+
+        await client
+            .db("myWallet")
+            .collection("wallet")
+            .insertOne({ownerUid, uid, value, description, type});
+    }
+    async removeWalletData(uid: string): Promise<void>
+    {
+        await client
+            .db("myWallet")
+            .collection("wallet")
+            .deleteOne({uid});
+    }
+    async editWalletData(uid: string, value: number, description: string): Promise<void>
+    {
+        await client
+            .db("myWallet")
+            .collection("wallet")
+            .updateOne({uid}, {$set: {value, description}});
+    }
+}
+
+export const repository = new Repository(); 
