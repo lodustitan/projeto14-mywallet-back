@@ -10,7 +10,7 @@ class WalletController
 
         try
         {
-            await repository.addWalletData(data.ownerUid, data.value, data.description, data.type);
+            await repository.addWalletData(data.owneruid, data.value, data.description, data.type);
             res.send("Wallet criado.").status(StatusCode.Created);
         }
         catch(err)
@@ -25,7 +25,7 @@ class WalletController
         try
         {
             await repository.removeWalletData(data.uid);
-            res.send("Wallet criado.").status(StatusCode.Created);
+            res.send("Wallet deletado.").status(StatusCode.Created);
         }
         catch(err)
         {
@@ -39,7 +39,21 @@ class WalletController
         try
         {
             await repository.editWalletData(data.uid, data.value, data.description);
-            res.send("Wallet criado.").status(StatusCode.Created);
+            res.send("Wallet modificado.").status(StatusCode.Created);
+        }
+        catch(err)
+        {
+            console.error(err);
+        }
+    }
+    async getWallets(req: Request, res: Response)
+    {
+        const { data } = res.locals;
+
+        try
+        {
+            const query =  await repository.getAllWalletUser(data.uid);
+            res.send(query).status(StatusCode.OK);
         }
         catch(err)
         {
@@ -48,4 +62,4 @@ class WalletController
     }
 }
 
-export const wallerController = new WalletController();
+export const walletController = new WalletController();

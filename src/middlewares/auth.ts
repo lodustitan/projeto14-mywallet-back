@@ -4,6 +4,24 @@ import { StatusCode } from "../types/types";
 
 class Middleware
 {
+    async verifyUser(req: Request, res: Response, next: NextFunction)
+    {
+        const { uid } = req.headers;
+
+        const validJoi = schemas.userSchema.validate({uid});
+
+        if(validJoi.error)
+        {
+            const errorList = validJoi.error.details.map(detail => detail);
+            res.send(errorList).status(StatusCode.UnprocessableEntity);
+            return;
+        }
+        else
+        {
+            res.locals.data = uid;
+            next();
+        }
+    }
     async verifyRegisterModel(req: Request, res: Response, next: NextFunction)
     {
         try
@@ -55,12 +73,13 @@ class Middleware
     async verifyWalletCreateModel(req: Request, res: Response, next: NextFunction)
     {
         const { value, description, type } = req.body;
-        const { ownerUid } = req.headers;
+        const { owneruid } = req.headers;
 
+        console.log(owneruid, description, value, type);
         try
         {
             const validJoi = schemas.walletCreateSchema.validate(
-                {ownerUid, value, description, type}, 
+                {owneruid, value, description, type}, 
                 {abortEarly: false}
             );
     
@@ -84,13 +103,12 @@ class Middleware
     }
     async verifyWalletDeleteModel(req: Request, res: Response, next: NextFunction)
     {
-        const { uid } = req.body;
-        const { ownerUid } = req.headers;
+        const { owneruid, uid } = req.headers;
 
         try
         {
             const validJoi = schemas.walletDeleteSchema.validate(
-                {ownerUid, uid}, 
+                {owneruid, uid}, 
                 {abortEarly: false}
             );
     
@@ -102,7 +120,7 @@ class Middleware
             }
             else
             {
-                res.locals.data = {...req.body, ...req.headers};
+                res.locals.data = { owneruid, uid };
                 next();
             }
         }
@@ -115,12 +133,12 @@ class Middleware
     async verifyWalletUpdateModel(req: Request, res: Response, next: NextFunction)
     {
         const { value, description, type } = req.body;
-        const { ownerUid } = req.headers;
+        const { owneruid } = req.headers;
 
         try
         {
             const validJoi = schemas.walletUpdateSchema.validate(
-                {ownerUid, value, description, type}, 
+                {owneruid, value, description, type}, 
                 {abortEarly: false}
             );
     

@@ -19,7 +19,7 @@ class UserController {
         const { data } = res.locals;
         try {
             const uid = await repository_1.repository.loginAccount(data.email, data.password);
-            res.send({ uid }).status(types_1.StatusCode.OK);
+            res.json({ uid }).status(types_1.StatusCode.OK);
         }
         catch (err) {
             console.error(err);

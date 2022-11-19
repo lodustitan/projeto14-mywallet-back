@@ -1,6 +1,7 @@
 import { IRepository } from "../types/types.js";
 import { v4 as uuidv4 } from 'uuid';
 import bcrypt from "bcrypt";
+import dayjs from "dayjs";
 import client from "../database/database.js";
 
 class Repository implements IRepository
@@ -44,11 +45,13 @@ class Repository implements IRepository
     async addWalletData(ownerUid:string, value: number, description: string, type: string): Promise<void>
     {
         const uid = uuidv4();
-
+        value = Number(value);
+        const today = dayjs().format("DD/MM");  
+        
         await client
             .db("myWallet")
             .collection("wallet")
-            .insertOne({ownerUid, uid, value, description, type});
+            .insertOne({ownerUid, uid, value, description, type, date: today});
     }
     async removeWalletData(uid: string): Promise<void>
     {
@@ -63,6 +66,16 @@ class Repository implements IRepository
             .db("myWallet")
             .collection("wallet")
             .updateOne({uid}, {$set: {value, description}});
+    }
+    async getAllWalletUser(userUid: string)
+    {
+        const query = await client
+            .db("myWallet")
+            .collection("wallet")
+            .find({userUid})
+            .toArray();
+        
+        return query;
     }
 }
 

@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.repository = void 0;
 const uuid_1 = require("uuid");
 const bcrypt_1 = __importDefault(require("bcrypt"));
+const dayjs_1 = __importDefault(require("dayjs"));
 const database_js_1 = __importDefault(require("../database/database.js"));
 class Repository {
     async createAccount(name, email, password) {
@@ -36,10 +37,12 @@ class Repository {
     }
     async addWalletData(ownerUid, value, description, type) {
         const uid = (0, uuid_1.v4)();
+        value = Number(value);
+        const today = (0, dayjs_1.default)().format("DD/MM");
         await database_js_1.default
             .db("myWallet")
             .collection("wallet")
-            .insertOne({ ownerUid, uid, value, description, type });
+            .insertOne({ ownerUid, uid, value, description, type, date: today });
     }
     async removeWalletData(uid) {
         await database_js_1.default
@@ -52,6 +55,14 @@ class Repository {
             .db("myWallet")
             .collection("wallet")
             .updateOne({ uid }, { $set: { value, description } });
+    }
+    async getAllWalletUser(userUid) {
+        const query = await database_js_1.default
+            .db("myWallet")
+            .collection("wallet")
+            .find({ userUid })
+            .toArray();
+        return query;
     }
 }
 exports.repository = new Repository();
