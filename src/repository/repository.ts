@@ -73,7 +73,7 @@ class Repository implements IRepository
         const query = await client
             .db("myWallet")
             .collection("wallet")
-            .find({userUid})
+            .find({ownerUid: userUid})
             .toArray();
         
         return query;

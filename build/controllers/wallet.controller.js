@@ -39,7 +39,7 @@ class WalletController {
     async getWallets(req, res) {
         const { data } = res.locals;
         try {
-            const query = await repository_1.repository.getAllWalletUser(data.uid);
+            const query = await repository_1.repository.getAllWalletUser(data);
             res.send(query).status(types_1.StatusCode.OK);
         }
         catch (err) {

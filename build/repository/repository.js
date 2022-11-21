@@ -61,7 +61,7 @@ class Repository {
         const query = await database_js_1.default
             .db("myWallet")
             .collection("wallet")
-            .find({ userUid })
+            .find({ ownerUid: userUid })
             .toArray();
         return query;
     }

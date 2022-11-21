@@ -54,7 +54,7 @@ class WalletController
 
         try
         {
-            const query =  await repository.getAllWalletUser(data.uid);
+            const query =  await repository.getAllWalletUser(data);
             res.send(query).status(StatusCode.OK);
         }
         catch(err)
