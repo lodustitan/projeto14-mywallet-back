@@ -18,8 +18,8 @@ class UserController {
     async signIn(req, res) {
         const { data } = res.locals;
         try {
-            const uid = await repository_1.repository.loginAccount(data.email, data.password);
-            res.json({ uid }).status(types_1.StatusCode.OK);
+            const query = await repository_1.repository.loginAccount(data.email, data.password);
+            res.json({ uid: query.uid, name: query.name }).status(types_1.StatusCode.OK);
         }
         catch (err) {
             console.error(err);

@@ -72,10 +72,10 @@ class Middleware
     }
     async verifyWalletCreateModel(req: Request, res: Response, next: NextFunction)
     {
-        const { value, description, type } = req.body;
+        let { value, description, type } = req.body;
         const { owneruid } = req.headers;
 
-        console.log(owneruid, description, value, type);
+        value = Number(value);
         try
         {
             const validJoi = schemas.walletCreateSchema.validate(
@@ -132,13 +132,15 @@ class Middleware
     }
     async verifyWalletUpdateModel(req: Request, res: Response, next: NextFunction)
     {
-        const { value, description, type } = req.body;
+        let { value, description, uid } = req.body;
         const { owneruid } = req.headers;
 
+        value = Number(value);
+        
         try
         {
             const validJoi = schemas.walletUpdateSchema.validate(
-                {owneruid, value, description, type}, 
+                {owneruid, value, description, uid}, 
                 {abortEarly: false}
             );
     

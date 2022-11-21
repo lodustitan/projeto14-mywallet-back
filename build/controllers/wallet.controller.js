@@ -6,6 +6,7 @@ const repository_1 = require("../repository/repository");
 class WalletController {
     async createWallet(req, res) {
         const { data } = res.locals;
+        data.value = Number(data.value);
         try {
             await repository_1.repository.addWalletData(data.owneruid, data.value, data.description, data.type);
             res.send("Wallet criado.").status(types_1.StatusCode.Created);
@@ -26,6 +27,7 @@ class WalletController {
     }
     async updateWallet(req, res) {
         const { data } = res.locals;
+        data.value = Number(data.value);
         try {
             await repository_1.repository.editWalletData(data.uid, data.value, data.description);
             res.send("Wallet modificado.").status(types_1.StatusCode.Created);

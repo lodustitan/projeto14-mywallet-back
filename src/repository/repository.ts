@@ -25,9 +25,10 @@ class Repository implements IRepository
         }
 
     }
-    async loginAccount(email: string, password: string): Promise<string>
+    async loginAccount(email: string, password: string): Promise<any>
     {        
         let myUid: string = "";
+        let myName: string = "";
 
         const query = await client
                 .db("myWallet")
@@ -37,15 +38,15 @@ class Repository implements IRepository
         if(query)
         {
             if( bcrypt.compareSync(password, query.password) )
-                return myUid = query.uid;
+                myUid = query.uid;
+                myName = query.name;
         }
 
-        return myUid;
+        return {uid: myUid, name: myName};
     }
     async addWalletData(ownerUid:string, value: number, description: string, type: string): Promise<void>
     {
         const uid = uuidv4();
-        value = Number(value);
         const today = dayjs().format("DD/MM");  
         
         await client

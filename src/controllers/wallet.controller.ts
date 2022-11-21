@@ -7,6 +7,7 @@ class WalletController
     async createWallet(req: Request, res: Response)
     {
         const { data } = res.locals;
+        data.value = Number(data.value);
 
         try
         {
@@ -36,6 +37,7 @@ class WalletController
     {
         const { data } = res.locals;
 
+        data.value = Number(data.value);
         try
         {
             await repository.editWalletData(data.uid, data.value, data.description);

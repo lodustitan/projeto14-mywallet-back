@@ -1,7 +1,7 @@
 export interface IRepository 
 {
     createAccount(name: string, email: string, password: string): Promise<void>;
-    loginAccount(email: string, password: string): Promise<string>;
+    loginAccount(email: string, password: string): Promise<any>;
 }
 export enum StatusCode {
     OK = 200,

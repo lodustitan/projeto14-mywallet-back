@@ -23,8 +23,8 @@ class UserController
         const { data } = res.locals;
         try
         {
-            const uid = await repository.loginAccount(data.email, data.password);
-            res.json({uid}).status(StatusCode.OK);
+            const query = await repository.loginAccount(data.email, data.password);
+            res.json({uid: query.uid, name: query.name}).status(StatusCode.OK);
         }
         catch(err)
         {

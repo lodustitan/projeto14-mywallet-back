@@ -54,9 +54,9 @@ class Middleware {
         }
     }
     async verifyWalletCreateModel(req, res, next) {
-        const { value, description, type } = req.body;
+        let { value, description, type } = req.body;
         const { owneruid } = req.headers;
-        console.log(owneruid, description, value, type);
+        value = Number(value);
         try {
             const validJoi = schema_1.schemas.walletCreateSchema.validate({ owneruid, value, description, type }, { abortEarly: false });
             if (validJoi.error) {
@@ -94,10 +94,11 @@ class Middleware {
         }
     }
     async verifyWalletUpdateModel(req, res, next) {
-        const { value, description, type } = req.body;
+        let { value, description, uid } = req.body;
         const { owneruid } = req.headers;
+        value = Number(value);
         try {
-            const validJoi = schema_1.schemas.walletUpdateSchema.validate({ owneruid, value, description, type }, { abortEarly: false });
+            const validJoi = schema_1.schemas.walletUpdateSchema.validate({ owneruid, value, description, uid }, { abortEarly: false });
             if (validJoi.error) {
                 const errorList = validJoi.error.details.map(detail => detail);
                 res.send(errorList).status(types_1.StatusCode.UnprocessableEntity);

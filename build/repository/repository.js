@@ -25,19 +25,20 @@ class Repository {
     }
     async loginAccount(email, password) {
         let myUid = "";
+        let myName = "";
         const query = await database_js_1.default
             .db("myWallet")
             .collection("user")
             .findOne({ email });
         if (query) {
             if (bcrypt_1.default.compareSync(password, query.password))
-                return myUid = query.uid;
+                myUid = query.uid;
+            myName = query.name;
         }
-        return myUid;
+        return { uid: myUid, name: myName };
     }
     async addWalletData(ownerUid, value, description, type) {
         const uid = (0, uuid_1.v4)();
-        value = Number(value);
         const today = (0, dayjs_1.default)().format("DD/MM");
         await database_js_1.default
             .db("myWallet")
